@@ -12,7 +12,7 @@ class SpindlerBattery(Battery):
         
     def needs_service_battery(self) -> bool:
         # print(self.last_service_date.replace(year = self.last_service_date.year + 2))
-        if self.current_date >= self.last_service_date.replace(year = self.last_service_date.year + 2):
+        if self.current_date > self.last_service_date.replace(year = self.last_service_date.year + 2):
             return True
         else:
             return False
@@ -24,7 +24,7 @@ class NubbinBattery(Battery):
         self.last_service_date = last_service_date
         
     def needs_service_battery(self) -> bool:
-        if self.current_date >= self.last_service_date.replace(year = self.last_service_date.year + 2):
+        if self.current_date > self.last_service_date.replace(year = self.last_service_date.year + 4):
             return True
         else:
             return False
