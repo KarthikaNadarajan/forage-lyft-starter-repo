@@ -1,86 +1,76 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
 from car import Car
 from datetime import date
 from engine import *
 from battery import *
-class Creator(ABC):
-    
-    @abstractmethod
-    def create_car(self):
-        pass
+from tires import *
 
+class Creator():
+
+    def __init__(self,engine,battery,tires) -> None:
+        # print("inside init creator")
+        self.__engine,self.__battery,self.__tires = engine,battery,tires
+
+    def create_car(self):
+        # print("inside create car")
+        return Car(engine_cls=self.__engine,battery_cls=self.__battery,tire_cls= self.__tires)
+    
     def check_car(self) -> str:
         # print("INSIDE CHECK CAR")
         car = self.create_car()
-        # print("HEY ",car)
         return "Needs Service" if car.needs_service() else "Doesn't need service"
         
     
 class Calliope(Creator):
-    def __init__(self,current_date, last_service_date, current_mileage, last_service_mileage ) -> None:
-        # print("INSIDE INIT Calliope")
-        self.current_date=current_date
-        self.last_service_date = last_service_date
-        self.current_mileage= current_mileage
-        self.last_service_mileage = last_service_mileage
+    def __init__(self, current_date, last_service_date, current_mileage, last_service_mileage, tire_wear) -> None:
+        self.__engine = CapuletEngine(current_mileage, last_service_mileage)
+        self.__battery = SpindlerBattery(current_date,last_service_date)
+        self.__tires = CarriganTires(tire_wear)
+        super().__init__(self.__engine,self.__battery,self.__tires)
 
-    def create_car(self) -> Car:
-        return Car(self.current_date, self.last_service_date, self.current_mileage, self.last_service_mileage,engine_cls=CapuletEngine,battery_cls=SpindlerBattery)
 
 class Rorschach(Creator):
-    def __init__(self,current_date, last_service_date, current_mileage, last_service_mileage ) -> None:
-        # print("INSIDE INIT Rorschach")
-        self.current_date=current_date
-        self.last_service_date = last_service_date
-        self.current_mileage= current_mileage
-        self.last_service_mileage = last_service_mileage
-
-    def create_car(self) -> Car:
-        return Car(self.current_date, self.last_service_date, self.current_mileage, self.last_service_mileage,engine_cls=WilloughbyEngine,battery_cls=NubbinBattery)
+    def __init__(self, current_date, last_service_date, current_mileage, last_service_mileage, tire_wear) -> None:
+        self.__engine = WilloughbyEngine(current_mileage, last_service_mileage)
+        self.__battery = NubbinBattery(current_date,last_service_date)
+        self.__tires = OctoprimeTires(tire_wear)
+        super().__init__(self.__engine,self.__battery,self.__tires)  
     
 class Glissade(Creator):
-    def __init__(self,current_date, last_service_date, current_mileage, last_service_mileage ) -> None:
-        # print("INSIDE INIT Glissade")
-        self.current_date=current_date
-        self.last_service_date = last_service_date
-        self.current_mileage= current_mileage
-        self.last_service_mileage = last_service_mileage
+    def __init__(self, current_date, last_service_date, current_mileage, last_service_mileage, tire_wear) -> None:
+        self.__engine = WilloughbyEngine(current_mileage, last_service_mileage)
+        self.__battery = SpindlerBattery(current_date,last_service_date)
+        self.__tires = CarriganTires(tire_wear)
+        super().__init__(self.__engine,self.__battery,self.__tires) 
 
-    def create_car(self) -> Car:
-        return Car(self.current_date, self.last_service_date, self.current_mileage, self.last_service_mileage,engine_cls=WilloughbyEngine,battery_cls=SpindlerBattery)
-    
 class Palindrome(Creator):
-    def __init__(self,current_date, last_service_date,  warning_light_on) -> None:
-        # print("INSIDE INIT PALINDROME")
-        self.current_date=current_date
-        self.last_service_date = last_service_date
-        self.warning_light_on = warning_light_on
+    def __init__(self, current_date, last_service_date, warning_light_on,  tire_wear) -> None:
+        self.__engine = SternmanEngine(warning_light_on)
+        self.__battery = SpindlerBattery(current_date,last_service_date)
+        self.__tires = OctoprimeTires(tire_wear)
+        super().__init__(self.__engine,self.__battery,self.__tires) 
 
-    def create_car(self) -> Car:
-        return Car(self.current_date, self.last_service_date,  warning_light_on=self.warning_light_on,engine_cls=SternmanEngine,battery_cls=SpindlerBattery)
     
 class Thovex(Creator):
-    def __init__(self,current_date, last_service_date, current_mileage, last_service_mileage ) -> None:
-        # print("INSIDE INIT Thovex")
-        self.current_date=current_date
-        self.last_service_date = last_service_date
-        self.current_mileage= current_mileage
-        self.last_service_mileage = last_service_mileage
+    def __init__(self, current_date, last_service_date, current_mileage, last_service_mileage,  tire_wear) -> None:
+        self.__engine = CapuletEngine(current_mileage, last_service_mileage)
+        self.__battery = NubbinBattery(current_date,last_service_date)
+        self.__tires = OctoprimeTires(tire_wear)
+        super().__init__(self.__engine,self.__battery,self.__tires) 
 
-    def create_car(self) -> Car:
-        return Car(self.current_date, self.last_service_date, self.current_mileage, self.last_service_mileage,engine_cls=CapuletEngine,battery_cls=NubbinBattery)
-    
+
 def client_code(creator: Creator) -> None:
     print(creator.check_car())
     
 if __name__ == "__main__":
     print("App: Launched with the Palindrome")
-    client_code(Palindrome(current_date=date(2023, 9, 12),last_service_date=date(2021, 9, 14) , warning_light_on=True))
+    client_code(Palindrome(current_date=date(2023, 9, 12),last_service_date=date(2021, 9, 14) , warning_light_on=False, tire_wear=[0.9,0,0.6,0.1] ))
     print("\n")
-    print("App: Launched with the Thovex")
-    client_code(Thovex(current_date=date(2023, 9, 12),last_service_date=date(2019, 9, 5) , current_mileage= 20000, last_service_mileage=15000 ))
+    print("App: Launched with the Calliope")
+    client_code(Calliope(current_date=date(2023, 9, 12),last_service_date=date(2019, 9, 14) , current_mileage= 20000, last_service_mileage=15000, tire_wear=[0.9,0,0.6,0.1] ))
     print("\n")
-    print("App: Launched with the GLIssade")
-    client_code(Glissade(current_date=date(2023, 9, 12),last_service_date=date(2021, 10, 5) , current_mileage= 50000, last_service_mileage=15000 ))
+    print("App: Launched with the Rorschach")
+    client_code(Rorschach(current_date=date(2023, 9, 12),last_service_date=date(2019, 9, 5) , current_mileage= 50000, last_service_mileage=15000, tire_wear=[0.5,0.5,0.5,0.5] ))
+    print("\n")
+    print("App: Launched with the Glissade")
+    client_code(Glissade(current_date=date(2023, 9, 12),last_service_date=date(2021, 9, 15) , current_mileage= 50000, last_service_mileage=15000, tire_wear=[0.5,0.5,0.5,0.5] ))
     print("\n")
